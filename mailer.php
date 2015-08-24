@@ -13,7 +13,7 @@ date_default_timezone_set("Europe/Berlin");
 include_once('vendor/autoload.php');
 //include_once('functions.misc.inc.php');
 
-if (is_file(./config.php)) {
+if (is_file('./config.php')) {
     require './config.php';
 } else {
     require './config.dist.php';
