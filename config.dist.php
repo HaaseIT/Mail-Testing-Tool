@@ -1,3 +1,5 @@
+<?php
+
 define("ATTACHMENT_DIRECTORY", 'attachments/');
 define("ATTACHMENT_DIRECTORY_EMBEDDEDIMG", 'img/');
 
