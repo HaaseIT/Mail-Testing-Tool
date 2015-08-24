@@ -7,7 +7,6 @@ PHPMailer, functions.misc.inc.php - see github.com/elliebre Repo: DiesundDas
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-date_default_timezone_set("Europe/Berlin");
 
 //include_once('phpmailer/PHPMailerAutoload.php');
 include_once('vendor/autoload.php');
