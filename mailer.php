@@ -38,6 +38,25 @@ if ($hDirEmbImgAttachments) {
     unset($sDirentry);
     closedir($hDirEmbImgAttachments);
 }
+
+
+// Check for available attachments for embedding
+$hDirEmbAttachments = opendir('./'.ATTACHMENT_DIRECTORY);
+$bEmbAttachmentsExist = false;
+if ($hDirEmbAttachments) {
+    while($sDirentry = readdir($hDirEmbAttachments)) {
+        if ($sDirentry[0] == '.') continue; // no hidden files
+        elseif (@is_dir('./'.ATTACHMENT_DIRECTORY.$sDirentry)) {
+            continue;
+        } else {
+            $aDirentry = pathinfo($sDirentry);
+            $sEmbAttachments[$aDirentry["filename"]] = $aDirentry["basename"];
+            $bEmbAttachmentsExist = true;
+        }
+    } // endwhile
+    unset($sDirentry);
+    closedir($hDirEmbAttachments);
+}
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -86,7 +105,15 @@ if (isset($_POST["action"]) && $_POST["action"] == 'send') {
     if ($bEmbImgAttachmentsExist && isset($_REQUEST["EmbImg"]) && is_array($_REQUEST["EmbImg"])) {
         foreach ($_REQUEST["EmbImg"] as $sValue) {
             if (isset($sEmbImgAttachments[$sValue])) {
-                $mail->AddEmbeddedImage('./'.ATTACHMENT_DIRECTORY.ATTACHMENT_DIRECTORY_EMBEDDEDIMG.$sEmbImgAttachments[$sValue], $sValue);
+                $mail->AddEmbeddedImage('./'.ATTACHMENT_DIRECTORY.ATTACHMENT_DIRECTORY_EMBEDDEDIMG.basename($sEmbImgAttachments[$sValue]), $sValue);
+            }
+        }
+    }
+
+    if ($bEmbAttachmentsExist && isset($_REQUEST["EmbAtt"]) && is_array($_REQUEST["EmbAtt"])) {
+        foreach ($_REQUEST["EmbAtt"] as $sValue) {
+            if (isset($sEmbAttachments[$sValue])) {
+                $mail->addAttachment('./'.ATTACHMENT_DIRECTORY.basename($sEmbAttachments[$sValue]), $sEmbAttachments[$sValue]);
             }
         }
     }
@@ -182,6 +209,19 @@ if (isset($_POST["action"]) && $_POST["action"] == 'send') {
             if (isset($_REQUEST["EmbImg"]) && in_array($sKey, $_REQUEST["EmbImg"])) echo ' selected';
             echo '>'.$sValue.' - available as: ';
             echo '&lt;img src="cid:'.$sKey.'">';
+            echo '</option>';
+        }
+        echo '</select>';
+    }
+    if ($bEmbAttachmentsExist) {
+        echo '<br><label for="embedatt">Embed these attachments:</label><br>';
+        $iSelectSize = count($sEmbAttachments);
+        if ($iSelectSize > 5) $iSelectSize = 5;
+        echo '<select name="EmbAtt[]" id="embedatt" size="'.$iSelectSize.'" multiple="multiple">';
+        foreach ($sEmbAttachments as $sKey => $sValue) {
+            echo '<option value="'.$sKey.'"';
+            if (isset($_REQUEST["EmbAtt"]) && in_array($sKey, $_REQUEST["EmbAtt"])) echo ' selected';
+            echo '>'.$sValue;
             echo '</option>';
         }
         echo '</select>';
