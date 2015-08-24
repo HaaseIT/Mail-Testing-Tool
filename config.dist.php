@@ -2,6 +2,7 @@
 
 define("ATTACHMENT_DIRECTORY", 'attachments/');
 define("ATTACHMENT_DIRECTORY_EMBEDDEDIMG", 'img/');
+date_default_timezone_set("Europe/Berlin");
 
 $C = array(
     'mail_to' => array(
