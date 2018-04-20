@@ -166,7 +166,7 @@ if (isset($_POST["action"]) && $_POST["action"] == 'send') {
         // write to file
         file_put_contents('./log/' . date("Y-m-d-H-i-s") . '-' . $sRandomstring . '.html', $_POST["mailcontent"]);
         if (isset($C["premailer_enable"]) && $C["premailer_enable"] && isset($_POST["usepremailer"]) && $_POST["usepremailer"] == 'yes') {
-            file_put_contents('./log/' . date("Y-m-d-H-i-s") . '-' . $sRandomstring . '-compiled.html', $sMailcontenttext);
+            file_put_contents('./log/' . date("Y-m-d-H-i-s") . '-' . $sRandomstring . '-compiled.html', $aMailcontenthtml);
         }
     }
 }
