@@ -164,9 +164,10 @@ if (isset($_POST["action"]) && $_POST["action"] == 'send') {
 
     if (isset($C["log_mails"]) && $C["log_mails"]) {
         // write to file
-        $fp = fopen('./log/' . date("Y-m-d-H-i-s") . '-' . $sRandomstring . '.html', 'a');
-        fwrite($fp, $_POST["mailcontent"]);
-        fclose($fp);
+        file_put_contents('./log/' . date("Y-m-d-H-i-s") . '-' . $sRandomstring . '.html', $_POST["mailcontent"]);
+        if (isset($C["premailer_enable"]) && $C["premailer_enable"] && isset($_POST["usepremailer"]) && $_POST["usepremailer"] == 'yes') {
+            file_put_contents('./log/' . date("Y-m-d-H-i-s") . '-' . $sRandomstring . '-compiled.html', $sMailcontenttext);
+        }
     }
 }
 ?>
